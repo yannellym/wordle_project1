@@ -17,16 +17,14 @@ class MainActivity : AppCompatActivity() {
         var inputBox = findViewById<EditText>(R.id.textInputEditText)
         var toolbox = FourLetterWordList()
         val chosenWord: String = toolbox.getRandomFourLetterWord().lowercase()
-
+        var attempt = 1
 
 
         button.setOnClickListener {
             Log.d("chosen word", chosenWord)
             val userInput = inputBox.text
             var update = checkGuess(chosenWord, userInput)
-            var attempt = 1
-            updateField(update, attempt, userInput)
-
+            attempt = updateField(update, attempt, userInput)
         }
     }
     // * Parameters / Fields:
@@ -49,33 +47,36 @@ class MainActivity : AppCompatActivity() {
                 result += "X"
             }
         }
-        Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
         return result
     }
 
-    private fun updateField(update: String, attempt: Int, userInput: String): String {
+    private fun updateField(update: String, attempt: Int, userInput: Editable): Int {
         if (attempt==1){
-            var field = findViewById<TextView>(R.id.textField_guess1)
-            field.text = userInput
-            var check1 = findViewById<TextView>(R.id.textView_guesscheck1)
-            check1.text = update
-        } else if (attempt==2){
+
             var field = findViewById<TextView>(R.id.textField_guess1)
             field.text = userInput
             var check1 = findViewById<TextView>(R.id.textView_guesscheck1)
             check1.text = update
 
-        } else if (attempt==3){
-            var field = findViewById<TextView>(R.id.textField_guess1)
+        } else if (attempt==2){
+
+            var field = findViewById<TextView>(R.id.textField_guess2)
             field.text = userInput
-            var check1 = findViewById<TextView>(R.id.textView_guesscheck1)
-            check1.text = update
+            var check2 = findViewById<TextView>(R.id.textView_guesscheck2)
+            check2.text = update
+
+        } else if (attempt==3){
+
+            var field = findViewById<TextView>(R.id.textField_guess3)
+            field.text = userInput
+            var check3 = findViewById<TextView>(R.id.textView_guesscheck3)
+            check3.text = update
 
         }else {
             Toast.makeText(this, "GAME OVER", Toast.LENGTH_SHORT).show()
 
         }
-        return
+        return attempt + 1
     }
 }
 
