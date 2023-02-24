@@ -8,25 +8,38 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val button = findViewById<Button>(R.id.button)
-        var inputBox = findViewById<EditText>(R.id.textInputEditText)
-        var toolbox = FourLetterWordList()
+
+        val button: Button = findViewById<Button>(R.id.button)
+        var inputBox: EditText = findViewById<EditText>(R.id.textInputEditText)
+        var toolbox: FourLetterWordList = FourLetterWordList()
         val chosenWord: String = toolbox.getRandomFourLetterWord().lowercase()
-        var attempt = 1
+        val winMessage: TextView = findViewById<TextView>(R.id.winWord)
+        var attempt: Int = 1
 
+        if (attempt < 4) {
 
-        button.setOnClickListener {
-            Log.d("chosen word", chosenWord)
-            val userInput = inputBox.text
-            var update = checkGuess(chosenWord, userInput)
-            attempt = updateField(update, attempt, userInput)
+            button.setOnClickListener {
+                Log.d("chosen word", chosenWord)
+                val userInput = inputBox.text
+
+                if (chosenWord.length > 3) {
+                    var update = checkGuess(chosenWord, userInput)
+                    attempt = updateField(update, attempt, userInput, winMessage)
+                } else {
+                    Toast.makeText(this, "GUESS MUST BE 4 LETTERS LONG", Toast.LENGTH_SHORT).show()
+                }
+            }
+        } else{
+            Toast.makeText(this, "GAME OVER", Toast.LENGTH_SHORT).show()
         }
     }
+
     // * Parameters / Fields:
     //     *   wordToGuess : String - the target word the user is trying to guess
     //     *   guess : String - what the user entered as their guess
@@ -36,6 +49,7 @@ class MainActivity : AppCompatActivity() {
     //     *   '+' represents the right letter in the wrong place
     //     *   'X' represents a letter not in the target word
     //     */
+
     private fun checkGuess(chosenWord: String, guess: Editable): String {
         var result = ""
         for (i in 0..3) {
@@ -50,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         return result
     }
 
-    private fun updateField(update: String, attempt: Int, userInput: Editable): Int {
+    private fun updateField(update: String, attempt: Int, userInput: Editable, winMessage: TextView): Int {
         if (attempt==1){
 
             var field = findViewById<TextView>(R.id.textField_guess1)
@@ -65,18 +79,21 @@ class MainActivity : AppCompatActivity() {
             var check2 = findViewById<TextView>(R.id.textView_guesscheck2)
             check2.text = update
 
-        } else if (attempt==3){
+        } else if (attempt==3 || update == "OOOO"){
 
             var field = findViewById<TextView>(R.id.textField_guess3)
             field.text = userInput
             var check3 = findViewById<TextView>(R.id.textView_guesscheck3)
             check3.text = update
+            winMessage.text = "CONGRATULATIONS YOU WON!"
 
         }else {
             Toast.makeText(this, "GAME OVER", Toast.LENGTH_SHORT).show()
-
         }
         return attempt + 1
+    }
+    private fun userWon(update: String): Boolean {
+        return update == "0000"
     }
 }
 
