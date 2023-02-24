@@ -1,5 +1,6 @@
 package com.example.wordle
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -39,7 +40,6 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "GAME OVER", Toast.LENGTH_SHORT).show()
         }
     }
-
     // * Parameters / Fields:
     //     *   wordToGuess : String - the target word the user is trying to guess
     //     *   guess : String - what the user entered as their guess
@@ -49,7 +49,6 @@ class MainActivity : AppCompatActivity() {
     //     *   '+' represents the right letter in the wrong place
     //     *   'X' represents a letter not in the target word
     //     */
-
     private fun checkGuess(chosenWord: String, guess: Editable): String {
         var result = ""
         for (i in 0..3) {
@@ -80,20 +79,21 @@ class MainActivity : AppCompatActivity() {
             check2.text = update
 
         } else if (attempt==3 || update == "OOOO"){
-
             var field = findViewById<TextView>(R.id.textField_guess3)
             field.text = userInput
             var check3 = findViewById<TextView>(R.id.textView_guesscheck3)
             check3.text = update
-            winMessage.text = "CONGRATULATIONS YOU WON!"
-
+            userWon(winMessage)
         }else {
             Toast.makeText(this, "GAME OVER", Toast.LENGTH_SHORT).show()
         }
         return attempt + 1
     }
-    private fun userWon(update: String): Boolean {
-        return update == "0000"
+    private fun userWon(winMessage: TextView) {
+        var submit = findViewById<Button>(R.id.button)
+        winMessage.text = "CONGRATULATIONS YOU WON!"
+        submit.setBackgroundColor(Color.DKGRAY)
+        submit.isEnabled = false
     }
 }
 
